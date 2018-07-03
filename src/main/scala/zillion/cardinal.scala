@@ -58,6 +58,16 @@ object cardinal {
       fraction(SafeLong(n), SafeLong(d), Mixed, Traditional)
     }
 
+   /**
+   * Returns the given number's (or letter-number combination's) cardinal name.
+   *
+   * A cardinal number describes how many of something. For example,
+   * cardinal(b) would be "be" and cardinal(1h) would be
+   * "aitchteen".
+   */
+  def apply(n: String): String =
+    render(n, Cardinal)
+
   /**
    * Returns the given fraction's cardinal name.
    *

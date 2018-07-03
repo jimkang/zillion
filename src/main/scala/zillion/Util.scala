@@ -64,6 +64,51 @@ private[zillion] object Util {
       throw new IllegalArgumentException(s"number is >= 10^3003")
     }
 
+  def render(n: String, mode: NameMode): String =
+    if (n.matches("\\d+")) {
+      return render(SafeLong(n.toInt), mode);
+    /*
+    if (n < 0) {
+      "negative " + render(-n, mode)
+    } else if (n < 10) {
+      mode.ones(n.toInt)
+    } else if (n < 20) {
+      mode.teens(n.toInt - 10)
+    } else if (n < 100) {
+      val i = (n / 10).toInt
+      val r = (n % 10).toInt
+      if (r == 0) mode.tens(i) else Cardinal.tens(i) + "-" + mode.ones(r)
+    } else if (n < 1000) {
+      val h = render((n / 100).toInt, Cardinal)
+      val r = (n % 100).toInt
+      if (r == 0) mode.suffix(s"$h hundred") else s"$h hundred ${render(r, mode)}"
+    } else if (n < 1000000) {
+      val m = render((n / 1000).toInt, Cardinal)
+      val r = (n % 1000).toInt
+      if (r == 0) mode.suffix(s"$m thousand") else s"$m thousand ${render(r, mode)}"
+    } else if (n < SmallCutoff) {
+      val x = log10Mult3(n)
+      val p = SafeLong(10).pow(x)
+      val b = render(n / p, Cardinal)
+      val r = n % p
+      val t = thousands(x / 3)
+      if (r == 0) mode.suffix(s"$b $t") else s"$b $t ${render(r, mode)}"
+    } else if (n < LargeCutoff) {
+      val x = log10Mult3(n)
+      val xm3 = x - 3
+      val p = SafeLong(10).pow(x)
+      val b = render(n / p, Cardinal)
+      val r = n % p
+      val lh = largeHundreds(xm3 / 300)
+      val lt = largeTens((xm3 % 300) / 30, false)
+      val lu = largeUnits((xm3 % 30) / 3, if (lt == "") lh.last else lt.last)
+      if (r == 0) mode.suffix(s"$b ${lu}${lt}${lh}llion")
+      else s"$b ${lu}${lt}${lh}llion ${render(r, mode)}"
+      */
+    } else {
+      throw new IllegalArgumentException(s"number is >= 10^3003")
+    }
+
   val thousands = Vector("", "thousand", "million", "billion",
     "trillion", "quadrillion", "quintillion", "sextillion",
     "septillion", "octillion", "nonillion")

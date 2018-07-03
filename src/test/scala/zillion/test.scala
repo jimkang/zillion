@@ -26,6 +26,15 @@ class OrdinalTest extends GenericTest {
   def render(n: SafeLong): String = ordinal(n)
 }
 
+class AlphanumericTest extends FlatSpec {
+  "10698734" should "work like int render" in {
+    assert(cardinal("10698734") == "ten million six hundred ninety-eight thousand seven hundred thirty-four")
+  }
+ "1h" should "get you aitchteen" in {
+    assert(cardinal("1h") == "aitchteen")
+  }
+}
+
 trait GenericTest extends PropSpec with Matchers with PropertyChecks {
 
   implicit lazy val arbitrarySafeLong: Arbitrary[SafeLong] =
