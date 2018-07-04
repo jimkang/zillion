@@ -64,47 +64,51 @@ private[zillion] object Util {
       throw new IllegalArgumentException(s"number is >= 10^3003")
     }
 
-  def render(n: String, mode: NameMode): String =
-    if (n.matches("\\d+")) {
-      return render(SafeLong(n.toInt), mode);
-    /*
-    if (n < 0) {
-      "negative " + render(-n, mode)
-    } else if (n < 10) {
-      mode.ones(n.toInt)
-    } else if (n < 20) {
-      mode.teens(n.toInt - 10)
-    } else if (n < 100) {
-      val i = (n / 10).toInt
-      val r = (n % 10).toInt
-      if (r == 0) mode.tens(i) else Cardinal.tens(i) + "-" + mode.ones(r)
-    } else if (n < 1000) {
-      val h = render((n / 100).toInt, Cardinal)
-      val r = (n % 100).toInt
-      if (r == 0) mode.suffix(s"$h hundred") else s"$h hundred ${render(r, mode)}"
-    } else if (n < 1000000) {
-      val m = render((n / 1000).toInt, Cardinal)
-      val r = (n % 1000).toInt
-      if (r == 0) mode.suffix(s"$m thousand") else s"$m thousand ${render(r, mode)}"
-    } else if (n < SmallCutoff) {
-      val x = log10Mult3(n)
-      val p = SafeLong(10).pow(x)
-      val b = render(n / p, Cardinal)
-      val r = n % p
-      val t = thousands(x / 3)
-      if (r == 0) mode.suffix(s"$b $t") else s"$b $t ${render(r, mode)}"
-    } else if (n < LargeCutoff) {
-      val x = log10Mult3(n)
-      val xm3 = x - 3
-      val p = SafeLong(10).pow(x)
-      val b = render(n / p, Cardinal)
-      val r = n % p
-      val lh = largeHundreds(xm3 / 300)
-      val lt = largeTens((xm3 % 300) / 30, false)
-      val lu = largeUnits((xm3 % 30) / 3, if (lt == "") lh.last else lt.last)
-      if (r == 0) mode.suffix(s"$b ${lu}${lt}${lh}llion")
-      else s"$b ${lu}${lt}${lh}llion ${render(r, mode)}"
-      */
+  def render(s: String, mode: NameMode): String =
+    if (s.matches("\\d+")) {
+      return render(SafeLong(s.toInt), mode);
+    } else if (s.charAt(0) == '-') {
+      "negative " + render(s.substring(1).toInt, mode)
+    } else if (s.length < 2) {
+      val c = s.charAt(0)
+      if (charIsAlpha(c)) {
+        onesForChar(c)
+      } else {
+        mode.ones(c.toInt)
+      }
+    // } else if (n < 20) {
+      // mode.teens(n.toInt - 10)
+    // } else if (n < 100) {
+      // val i = (n / 10).toInt
+      // val r = (n % 10).toInt
+      // if (r == 0) mode.tens(i) else Cardinal.tens(i) + "-" + mode.ones(r)
+    // } else if (n < 1000) {
+      // val h = render((n / 100).toInt, Cardinal)
+      // val r = (n % 100).toInt
+      // if (r == 0) mode.suffix(s"$h hundred") else s"$h hundred ${render(r, mode)}"
+    // } else if (n < 1000000) {
+      // val m = render((n / 1000).toInt, Cardinal)
+      // val r = (n % 1000).toInt
+      // if (r == 0) mode.suffix(s"$m thousand") else s"$m thousand ${render(r, mode)}"
+    // } else if (n < SmallCutoff) {
+      // val x = log10Mult3(n)
+      // val p = SafeLong(10).pow(x)
+      // val b = render(n / p, Cardinal)
+      // val r = n % p
+      // val t = thousands(x / 3)
+      // if (r == 0) mode.suffix(s"$b $t") else s"$b $t ${render(r, mode)}"
+    // } else if (n < LargeCutoff) {
+      // val x = log10Mult3(n)
+      // val xm3 = x - 3
+      // val p = SafeLong(10).pow(x)
+      // val b = render(n / p, Cardinal)
+      // val r = n % p
+      // val lh = largeHundreds(xm3 / 300)
+      // val lt = largeTens((xm3 % 300) / 30, false)
+      // val lu = largeUnits((xm3 % 30) / 3, if (lt == "") lh.last else lt.last)
+      // if (r == 0) mode.suffix(s"$b ${lu}${lt}${lh}llion")
+      // else s"$b ${lu}${lt}${lh}llion ${render(r, mode)}"
+      // */
     } else {
       throw new IllegalArgumentException(s"number is >= 10^3003")
     }
@@ -216,6 +220,10 @@ private[zillion] object Util {
     val ones = Vector("zero", "one", "two", "three", "four",
       "five", "six", "seven", "eight", "nine")
 
+    val onesAlpha = Vector("ay", "be", "cee", "dee", "ee", "eff", "gee",
+      "aiche", "eye", "jay", "kay", "ell", "em", "en", "oh", "pee", "cue",
+      "are", "ess", "tee", "you", "vee", "double you", "eks", "why", "zee")
+
     val teens = Vector("ten", "eleven", "twelve", "thirteen", "fourteen",
       "fifteen", "sixteen", "seventeen", "eighteen", "nineteen")
 
@@ -254,4 +262,37 @@ private[zillion] object Util {
     else if (n == 1) ""
     else if (n == 2) "half"
     else ordinal(n)
+
+  def charIsAlpha(c: Char): Boolean =
+    c >= 'A' && c <= 'z'
+
+  def onesForChar(c: Char): String =
+    c match {
+      case 'a' | 'A' => "ay"
+      case 'b' | 'B' => "bee"
+      case 'c' | 'C' => "cee"
+      case 'd' | 'D' => "dee"
+      case 'e' | 'E' => "ee"
+      case 'f' | 'F' => "eff"
+      case 'g' | 'G' => "gee"
+      case 'h' | 'H' => "aiche"
+      case 'i' | 'I' => "eye"
+      case 'j' | 'J' => "jay"
+      case 'k' | 'K' => "kay"
+      case 'l' | 'L' => "ell"
+      case 'm' | 'M' => "em"
+      case 'n' | 'N' => "en"
+      case 'o' | 'O' => "oh"
+      case 'p' | 'P' => "pee"
+      case 'q' | 'Q' => "cue"
+      case 'r' | 'R' => "are"
+      case 's' | 'S' => "ess"
+      case 't' | 'T' => "tee"
+      case 'u' | 'U' => "you"
+      case 'v' | 'V' => "vee"
+      case 'w' | 'W' => "double you"
+      case 'x' | 'X' => "eks"
+      case 'y' | 'Y' => "why"
+      case 'z' | 'Z' => "zee"
+    }
 }

@@ -26,12 +26,22 @@ class OrdinalTest extends GenericTest {
   def render(n: SafeLong): String = ordinal(n)
 }
 
-class AlphanumericTest extends FlatSpec {
-  "10698734" should "work like int render" in {
-    assert(cardinal("10698734") == "ten million six hundred ninety-eight thousand seven hundred thirty-four")
-  }
- "1h" should "get you aitchteen" in {
-    assert(cardinal("1h") == "aitchteen")
+case class BasicTestCase(desc: String, inputString: String, expected: String)
+
+class AlphanumericTest extends FreeSpec {
+  val basicTestCases = List(
+    BasicTestCase("Defer to int render", "10698734", "ten million six hundred ninety-eight thousand seven hundred thirty-four"),
+    BasicTestCase("Negative sign", "-256", "negative two hundred fifty-six"),
+    BasicTestCase("Single digit", "1", "one"),
+    BasicTestCase("Single digit alpha", "b", "bee"),
+    BasicTestCase("expanded numeral set", "1h", "aitchteen")
+  )
+
+  for (testCase <- basicTestCases) {
+    testCase.desc in {
+      val result = cardinal(testCase.inputString) 
+      assert(result == testCase.expected)
+    }
   }
 }
 
