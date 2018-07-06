@@ -76,8 +76,13 @@ private[zillion] object Util {
       } else {
         mode.ones(c.toInt)
       }
-    // } else if (n < 20) {
-      // mode.teens(n.toInt - 10)
+    } else if (s.length < 3 && s.charAt(0) == '1') {
+      if (charIsAlpha(s.charAt(1))) {
+        teensForChar(s.charAt(1))
+      } else {
+        mode.teens(s.toInt - 10)
+      }
+      // else if s.length < 3 TODO
     // } else if (n < 100) {
       // val i = (n / 10).toInt
       // val r = (n % 10).toInt
@@ -275,7 +280,7 @@ private[zillion] object Util {
       case 'e' | 'E' => "ee"
       case 'f' | 'F' => "eff"
       case 'g' | 'G' => "gee"
-      case 'h' | 'H' => "aiche"
+      case 'h' | 'H' => "aitch"
       case 'i' | 'I' => "eye"
       case 'j' | 'J' => "jay"
       case 'k' | 'K' => "kay"
@@ -290,9 +295,12 @@ private[zillion] object Util {
       case 't' | 'T' => "tee"
       case 'u' | 'U' => "you"
       case 'v' | 'V' => "vee"
-      case 'w' | 'W' => "double you"
+      case 'w' | 'W' => "doubleyou"
       case 'x' | 'X' => "eks"
       case 'y' | 'Y' => "why"
       case 'z' | 'Z' => "zee"
     }
+
+  def teensForChar(c: Char): String =
+    onesForChar(c) + "teen"
 }
