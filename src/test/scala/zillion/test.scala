@@ -34,7 +34,10 @@ class AlphanumericTest extends FreeSpec {
     BasicTestCase("Negative sign", "-256", "negative two hundred fifty-six"),
     BasicTestCase("Single digit", "1", "one"),
     BasicTestCase("Single digit alpha", "b", "bee"),
-    BasicTestCase("expanded numeral set", "1h", "aitchteen")
+    BasicTestCase("expanded numeral set", "1h", "aitchteen"),
+    BasicTestCase("twenties", "2b", "twenty-bee"),
+    BasicTestCase("nineties", "9u", "ninety-you"),
+    BasicTestCase("jayties", "jp", "jayty-pee")
   )
 
   for (testCase <- basicTestCases) {

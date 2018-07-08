@@ -72,21 +72,20 @@ private[zillion] object Util {
     } else if (s.length < 2) {
       val c = s.charAt(0)
       if (charIsAlpha(c)) {
-        onesForChar(c)
+        vocalizationForChar(c, null, Cardinal.ones)
       } else {
         mode.ones(c.toInt)
       }
     } else if (s.length < 3 && s.charAt(0) == '1') {
       if (charIsAlpha(s.charAt(1))) {
-        teensForChar(s.charAt(1))
+        vocalizationForChar(s.charAt(1), "teen", Cardinal.teens)
       } else {
         mode.teens(s.toInt - 10)
       }
-      // else if s.length < 3 TODO
-    // } else if (n < 100) {
-      // val i = (n / 10).toInt
-      // val r = (n % 10).toInt
-      // if (r == 0) mode.tens(i) else Cardinal.tens(i) + "-" + mode.ones(r)
+    } else if (s.length < 3) {
+      val i = s.charAt(0)
+      val r = s.charAt(1)
+      if (r == '0') mode.tens(i) else vocalizationForChar(i, "ty", Cardinal.tens) + "-" + vocalizationForChar(r, null, Cardinal.ones)
     // } else if (n < 1000) {
       // val h = render((n / 100).toInt, Cardinal)
       // val r = (n % 100).toInt
@@ -225,10 +224,6 @@ private[zillion] object Util {
     val ones = Vector("zero", "one", "two", "three", "four",
       "five", "six", "seven", "eight", "nine")
 
-    val onesAlpha = Vector("ay", "be", "cee", "dee", "ee", "eff", "gee",
-      "aiche", "eye", "jay", "kay", "ell", "em", "en", "oh", "pee", "cue",
-      "are", "ess", "tee", "you", "vee", "double you", "eks", "why", "zee")
-
     val teens = Vector("ten", "eleven", "twelve", "thirteen", "fourteen",
       "fifteen", "sixteen", "seventeen", "eighteen", "nineteen")
 
@@ -271,8 +266,8 @@ private[zillion] object Util {
   def charIsAlpha(c: Char): Boolean =
     c >= 'A' && c <= 'z'
 
-  def onesForChar(c: Char): String =
-    c match {
+  def vocalizationForChar(c: Char, suffix: String, fallthroughList: Vector[String]): String = {
+    val voc = c match {
       case 'a' | 'A' => "ay"
       case 'b' | 'B' => "bee"
       case 'c' | 'C' => "cee"
@@ -299,8 +294,16 @@ private[zillion] object Util {
       case 'x' | 'X' => "eks"
       case 'y' | 'Y' => "why"
       case 'z' | 'Z' => "zee"
+      case fallthrough => null
     }
-
-  def teensForChar(c: Char): String =
-    onesForChar(c) + "teen"
+    if (voc == null) {
+      fallthroughList(c.toString.toInt)
+    } else {
+      if (suffix != null) {
+        voc + suffix
+      } else {
+        voc
+      }
+    }
+  }
 }
